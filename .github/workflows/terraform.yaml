@@ -1,0 +1,121 @@
+name: CICD pipeline for creating infrastructure
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Log in to Azure CLI
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.5.0
+
+      - name: Initialize Terraform
+        run: terraform init -backend-config="storage_account_name=${{ secrets.STORAGE_ACCOUNT_NAME_TFSTATE }}" -backend-config="container_name=${{ secrets.CONTAINER_NAME }}" -backend-config="key=${{ secrets.STATE_FILE_KEY }}" -backend-config="access_key=${{ secrets.ACCESS_KEY }}"
+        working-directory: ./  # The root directory of your repository (polystox-infrastructure)
+
+      - name: Plan Infrastructure
+        env:
+          TF_VAR_storage_account_name_tfstate: ${{ secrets.STORAGE_ACCOUNT_NAME_TFSTATE }}
+          TF_VAR_container_name: ${{ secrets.CONTAINER_NAME }}
+          TF_VAR_state_file_key: ${{ secrets.STATE_FILE_KEY }}
+          TF_VAR_access_key: ${{ secrets.ACCESS_KEY }}
+          TF_VAR_storage_account_name: ${{ secrets.STORAGE_ACCOUNT_NAME }}
+          TF_VAR_storage_account_tier: ${{ secrets.STORAGE_ACCOUNT_TIER }}
+          TF_VAR_account_replication_type: ${{ secrets.STORAGE_ACCOUNT_REPLICATION_TYPE }}
+          TF_VAR_resource_group_name: ${{ secrets.RESOURCE_GROUP_NAME }}
+          TF_VAR_location: ${{ secrets.LOCATION }}
+          TF_VAR_vnet_name: ${{ secrets.VNET_NAME }}
+          TF_VAR_subnet_name: ${{ secrets.SUBNET_NAME }}
+          TF_VAR_subnet_address_prefixes: ${{ secrets.SUBNET_ADDRESS_PREFIXES }}
+          TF_VAR_vnet_address_space: ${{ secrets.VNET_ADDRESS_SPACE }}
+          TF_VAR_kubernetes_cluster_name: ${{ secrets.KUBERNETES_CLUSTER_NAME }}
+          TF_VAR_dns_prefix: ${{ secrets.DNS_PREFIX }}
+          TF_VAR_node_pool_name: ${{ secrets.NODE_POOL_NAME }}
+          TF_VAR_vm_size: ${{ secrets.VM_SIZE }}
+          TF_VAR_node_count: ${{ secrets.NODE_COUNT }}
+          TF_VAR_os_disk_size_gb: ${{ secrets.OS_DISK_SIZE_GB }}
+          TF_VAR_identity_type: ${{ secrets.IDENTITY_TYPE }}
+          TF_VAR_network_plugin: ${{ secrets.NETWORK_PLUGIN }}
+          TF_VAR_service_cidr: ${{ secrets.SERVICE_CIDR }}
+          TF_VAR_dns_service_ip: ${{ secrets.DNS_SERVICE_IP }}
+          TF_VAR_kubernetes_version: ${{ secrets.KUBERNETES_VERSION }}
+          TF_VAR_acr_name: ${{ secrets.ACR_NAME }}
+          TF_VAR_sku: ${{ secrets.SKU }}
+          TF_VAR_admin_enabled: ${{ secrets.ADMIN_ENABLED }}
+          TF_VAR_apim_name: ${{ secrets.APIM_NAME }}
+          TF_VAR_apim_publisher_name: ${{ secrets.APIM_PUBLISHER_NAME }}
+          TF_VAR_apim_publisher_email: ${{ secrets.APIM_PUBLISHER_EMAIL }}
+          TF_VAR_apim_sku_name: ${{ secrets.APIM_SKU_NAME }}
+          TF_VAR_tags: ${{ secrets.TAGS }}
+          TF_VAR_postgresql_server_name: ${{ secrets.POSTGRESQL_SERVER_NAME }}
+          TF_VAR_postgresql_admin_username: ${{ secrets.POSTGRESQL_ADMIN_USERNAME }}
+          TF_VAR_postgresql_admin_password: ${{ secrets.POSTGRESQL_ADMIN_PASSWORD }}
+          TF_VAR_postgresql_version: ${{ secrets.POSTGRESQL_VERSION }}
+          TF_VAR_postgresql_sku_name: ${{ secrets.POSTGRESQL_SKU_NAME }}
+          TF_VAR_postgresql_storage_mb: ${{ secrets.POSTGRESQL_STORAGE_MB }}
+          TF_VAR_postgresql_backup_retention_days: ${{ secrets.POSTGRESQL_BACKUP_RETENTION_DAYS }}
+          TF_VAR_geo_redundant_backup_enabled: ${{ secrets.POSTGRESQL_GEO_REDUNDANT_BACKUP_ENABLED }}
+          TF_VAR_postgresql_storage_autogrow_enabled: ${{ secrets.POSTGRESQL_STORAGE_AUTOGROW_ENABLED }}
+          TF_VAR_postgresql_allowed_ip_ranges: ${{ secrets.POSTGRESQL_ALLOWED_IP_RANGES }}
+        run: terraform plan
+        working-directory: ./  # Adjust if necessary
+
+      - name: Apply Infrastructure
+        env:
+          TF_VAR_storage_account_name_tfstate: ${{ secrets.STORAGE_ACCOUNT_NAME_TFSTATE }}
+          TF_VAR_container_name: ${{ secrets.CONTAINER_NAME }}
+          TF_VAR_state_file_key: ${{ secrets.STATE_FILE_KEY }}
+          TF_VAR_access_key: ${{ secrets.ACCESS_KEY }}
+          TF_VAR_storage_account_name: ${{ secrets.STORAGE_ACCOUNT_NAME }}
+          TF_VAR_storage_account_tier: ${{ secrets.STORAGE_ACCOUNT_TIER }}
+          TF_VAR_account_replication_type: ${{ secrets.STORAGE_ACCOUNT_REPLICATION_TYPE }}
+          TF_VAR_resource_group_name: ${{ secrets.RESOURCE_GROUP_NAME }}
+          TF_VAR_location: ${{ secrets.LOCATION }}
+          TF_VAR_vnet_name: ${{ secrets.VNET_NAME }}
+          TF_VAR_subnet_name: ${{ secrets.SUBNET_NAME }}
+          TF_VAR_subnet_address_prefixes: ${{ secrets.SUBNET_ADDRESS_PREFIXES }}
+          TF_VAR_vnet_address_space: ${{ secrets.VNET_ADDRESS_SPACE }}
+          TF_VAR_kubernetes_cluster_name: ${{ secrets.KUBERNETES_CLUSTER_NAME }}
+          TF_VAR_dns_prefix: ${{ secrets.DNS_PREFIX }}
+          TF_VAR_node_pool_name: ${{ secrets.NODE_POOL_NAME }}
+          TF_VAR_vm_size: ${{ secrets.VM_SIZE }}
+          TF_VAR_node_count: ${{ secrets.NODE_COUNT }}
+          TF_VAR_os_disk_size_gb: ${{ secrets.OS_DISK_SIZE_GB }}
+          TF_VAR_identity_type: ${{ secrets.IDENTITY_TYPE }}
+          TF_VAR_network_plugin: ${{ secrets.NETWORK_PLUGIN }}
+          TF_VAR_service_cidr: ${{ secrets.SERVICE_CIDR }}
+          TF_VAR_dns_service_ip: ${{ secrets.DNS_SERVICE_IP }}
+          TF_VAR_kubernetes_version: ${{ secrets.KUBERNETES_VERSION }}
+          TF_VAR_acr_name: ${{ secrets.ACR_NAME }}
+          TF_VAR_sku: ${{ secrets.SKU }}
+          TF_VAR_admin_enabled: ${{ secrets.ADMIN_ENABLED }}
+          TF_VAR_apim_name: ${{ secrets.APIM_NAME }}
+          TF_VAR_apim_publisher_name: ${{ secrets.APIM_PUBLISHER_NAME }}
+          TF_VAR_apim_publisher_email: ${{ secrets.APIM_PUBLISHER_EMAIL }}
+          TF_VAR_apim_sku_name: ${{ secrets.APIM_SKU_NAME }}
+          TF_VAR_tags: ${{ secrets.TAGS }}
+          TF_VAR_postgresql_server_name: ${{ secrets.POSTGRESQL_SERVER_NAME }}
+          TF_VAR_postgresql_admin_username: ${{ secrets.POSTGRESQL_ADMIN_USERNAME }}
+          TF_VAR_postgresql_admin_password: ${{ secrets.POSTGRESQL_ADMIN_PASSWORD }}
+          TF_VAR_postgresql_version: ${{ secrets.POSTGRESQL_VERSION }}
+          TF_VAR_postgresql_sku_name: ${{ secrets.POSTGRESQL_SKU_NAME }}
+          TF_VAR_postgresql_storage_mb: ${{ secrets.POSTGRESQL_STORAGE_MB }}
+          TF_VAR_postgresql_backup_retention_days: ${{ secrets.POSTGRESQL_BACKUP_RETENTION_DAYS }}
+          TF_VAR_geo_redundant_backup_enabled: ${{ secrets.POSTGRESQL_GEO_REDUNDANT_BACKUP_ENABLED }}
+          TF_VAR_postgresql_storage_autogrow_enabled: ${{ secrets.POSTGRESQL_STORAGE_AUTOGROW_ENABLED }}
+          TF_VAR_postgresql_allowed_ip_ranges: ${{ secrets.POSTGRESQL_ALLOWED_IP_RANGES }}
+        run: terraform apply -auto-approve
+        working-directory: ./
