@@ -3,7 +3,7 @@ name: CICD pipeline for creating infrastructure
 on:
   push:
     branches:
-      - main
+      - demo
 
 jobs:
   deploy:
