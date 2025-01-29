@@ -6,6 +6,7 @@
 
 This repository contains Terraform configurations for managing infrastructure across multiple environments.
 
+```markdown
 ## Directory Structure
 
 /infrastructure
@@ -46,7 +47,7 @@ This repository contains Terraform configurations for managing infrastructure ac
     │   ├── main.tf
     │   ├── variables.tf
     │   └── output.tf
-
+```
 
 ## Setup and Commands
 
