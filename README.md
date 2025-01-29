@@ -3,13 +3,13 @@
 
 
 ```markdown
-# Polystox Infrastructure
+# Azure Infrastructure
 
 This repository contains Terraform configurations for managing infrastructure across multiple environments.
 
 ## Directory Structure
 
-/polystox-infrastructure
+/infrastructure
 ├── main.tf
 ├── terraform.tfvars
 ├── variables.tf
