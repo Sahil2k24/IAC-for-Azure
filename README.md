@@ -1,5 +1,3 @@
-
-```markdown
 # Polystox Infrastructure on Azure  
 
 This repository contains Terraform configurations for managing infrastructure on **Microsoft Azure** using best practices.  
