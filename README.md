@@ -2,7 +2,6 @@
 ![image](https://github.com/user-attachments/assets/8c585ab5-62b2-4b28-b563-1105a723e318)
 
 
-```markdown
 # Azure Infrastructure
 
 This repository contains Terraform configurations for managing infrastructure across multiple environments.
@@ -48,8 +47,6 @@ This repository contains Terraform configurations for managing infrastructure ac
     │   ├── variables.tf
     │   └── output.tf
 
-
-```
 
 ## Setup and Commands
 
