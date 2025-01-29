@@ -1,28 +1,10 @@
-# Polystox Infrastructure on Azure  
+Here’s the updated README file with the directory structure and Terraform commands included:
 
-This repository contains Terraform configurations for managing infrastructure on **Microsoft Azure** using best practices.  
+```markdown
+# Polystox Infrastructure
 
-## Infrastructure Best Practices  
+This repository contains Terraform configurations for managing infrastructure across multiple environments.
 
-- **Pipeline-Driven Deployment:** Infrastructure is created and managed through a CI/CD pipeline, ensuring automation and consistency.  
-- **No Local tfvars File:** Sensitive and environment-specific values are passed as pipeline variables, eliminating the need for a `terraform.tfvars` file.  
-- **State Management:** The Terraform state (`tfstate`) file is stored securely in an **Azure Storage Account** instead of a local machine, ensuring collaboration and preventing loss.  
-- **State Locking:** To avoid conflicts in concurrent executions, **state locking** is enabled using Azure Storage.  
-
-## Services Provisioned  
-
-This Terraform setup provisions the following key services:  
-
-- **Azure Kubernetes Service (AKS):** Manages containerized applications with scalability.  
-- **Virtual Network (VNet) & Subnets:** Provides a secure and isolated network infrastructure.  
-- **Azure Container Registry (ACR):** Stores and manages container images.  
-- **Azure API Management (APIM):** Controls and secures API access.  
-- **Azure PostgreSQL Flexible Server:** Manages databases with high availability.  
-- **Azure Storage Account:** Stores Terraform state and supports various storage needs.  
-
-## Directory Structure  
-
-```
 ## Directory Structure
 
 /polystox-infrastructure
@@ -64,37 +46,47 @@ This Terraform setup provisions the following key services:
     │   ├── variables.tf
     │   └── output.tf
 
+
 ```
 
-## Terraform Commands  
+## Setup and Commands
 
-1. **Initialize Terraform**  
+1. **Initialize Terraform**:
+
+   To initialize Terraform and download the required providers:
 
    ```bash
    terraform init
    ```
 
-2. **Plan the Infrastructure Changes**  
+2. **Apply Configuration** (for specific environment):
+
+   Navigate to the desired environment directory and apply the configuration:
 
    ```bash
-   terraform plan
+   cd envs/development    # or envs/staging, envs/production
+   terraform apply
    ```
 
-3. **Apply Configuration**  
+3. **Other Terraform Commands**:
 
-   ```bash
-   terraform apply -auto-approve
-   ```
+   - **Plan the infrastructure changes**:
 
-4. **Destroy the Infrastructure**  
+     ```bash
+     terraform plan
+     ```
 
-   ```bash
-   terraform destroy -auto-approve
-   ```
+   - **Destroy the infrastructure**:
 
----
+     ```bash
+     terraform destroy
+     ```
 
-This setup ensures a **scalable, secure, and fully automated** Azure infrastructure following **industry best practices**. 🚀  
-```  
+4. **Global Variables**:
 
-This version clearly explains the **Azure-focused** approach, Terraform best practices, pipeline automation, and state management while keeping it concise. Let me know if you need any further refinements! 🚀
+   Edit the `terraform.tfvars` file to configure variables for your infrastructure.
+
+5. **Variable Definitions**:
+
+   The `variables.tf` file contains the necessary variable definitions for each environment.
+   
