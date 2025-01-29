@@ -1,4 +1,6 @@
-Here’s the updated README file with the directory structure and Terraform commands included:
+
+![image](https://github.com/user-attachments/assets/2427315f-b4d7-47a7-9eae-67b2660d68cb)
+
 
 ```markdown
 # Polystox Infrastructure
